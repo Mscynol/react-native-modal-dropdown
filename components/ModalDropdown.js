@@ -4,7 +4,6 @@ import {
   Dimensions,
   View,
   Text,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   TouchableHighlight,
   Modal,
@@ -18,7 +17,7 @@ import PropTypes from 'prop-types';
 const TOUCHABLE_ELEMENTS = [
   'TouchableHighlight',
   'TouchableOpacity',
-  'TouchableWithoutFeedback',
+  'TouchableOpacity',
   'TouchableNativeFeedback',
 ];
 
@@ -297,7 +296,7 @@ export default class ModalDropdown extends Component {
                 'landscape-right',
               ]}
           >
-            <TouchableWithoutFeedback
+            <TouchableOpacity
                 accessible={accessible}
                 disabled={!showDropdown}
                 onPress={this._onModalPress}
@@ -307,7 +306,7 @@ export default class ModalDropdown extends Component {
                   {loading ? this._renderLoading() : this._renderDropdown()}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Modal>
       );
     }
@@ -496,31 +495,20 @@ export default class ModalDropdown extends Component {
     return <RowTouchable {...touchableProps}>{row}</RowTouchable>;
   };
 
-  _onRowPress(rowData, rowID, highlightRow) {
-    const {
-      onSelect,
-      renderButtonText,
-      onDropdownWillHide,
-      multipleSelect
-    } = this.props;
+  _onRowPress(rowData, rowID) {
+    const { onSelect, renderButtonText, multipleSelect, onDropdownWillHide } = this.props;
 
+    // 执行 onSelect 回调，如果未定义或者返回 true，则更新状态
     if (!onSelect || onSelect(rowID, rowData) !== false) {
-      const value =
-          (renderButtonText && renderButtonText(rowData)) || rowData.toString();
+      const buttonText = (renderButtonText && renderButtonText(rowData)) || rowData.toString();
       this.setState({
-        buttonText: value,
+        buttonText: buttonText,
         selectedIndex: rowID,
-      });
-    }
-
-    if (!multipleSelect &&
-        (!onDropdownWillHide || onDropdownWillHide() !== false)
-    ) {
-      this.setState({
-        showDropdown: false,
+        showDropdown: !(multipleSelect === false && onDropdownWillHide && onDropdownWillHide() === false)
       });
     }
   }
+
 
   _renderSeparator = ({ leadingItem = '' }) => {
     const key = `spr_${leadingItem}`;
