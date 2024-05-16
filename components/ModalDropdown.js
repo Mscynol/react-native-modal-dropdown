@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 const TOUCHABLE_ELEMENTS = [
   'TouchableHighlight',
   'TouchableOpacity',
-  'TouchableWithoutFeedback',
+  'TouchableOpacity',
   'TouchableNativeFeedback',
 ];
 
@@ -297,7 +297,7 @@ export default class ModalDropdown extends Component {
                 'landscape-right',
               ]}
           >
-            <TouchableWithoutFeedback
+            <TouchableOpacity
                 accessible={accessible}
                 disabled={!showDropdown}
                 onPress={this._onModalPress}
@@ -307,7 +307,7 @@ export default class ModalDropdown extends Component {
                   {loading ? this._renderLoading() : this._renderDropdown()}
                 </View>
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </Modal>
       );
     }
