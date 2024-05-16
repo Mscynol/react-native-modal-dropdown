@@ -303,9 +303,11 @@ export default class ModalDropdown extends Component {
                 onPress={this._onModalPress}
             >
               <View style={styles.modal}>
-                <View style={[styles.dropdown, dropdownStyle, frameStyle]}>
-                  {loading ? this._renderLoading() : this._renderDropdown()}
-                </View>
+                <TouchableWithoutFeedback>
+                  <View style={[styles.dropdown, dropdownStyle, frameStyle]}>
+                    {loading ? this._renderLoading() : this._renderDropdown()}
+                  </View>
+                </TouchableWithoutFeedback>
               </View>
             </TouchableWithoutFeedback>
           </Modal>
@@ -362,10 +364,9 @@ export default class ModalDropdown extends Component {
   };
 
   _onModalPress = () => {
+    this.hide();
     const { onDropdownWillHide } = this.props;
-    if (!onDropdownWillHide || onDropdownWillHide() !== false) {
-      this.hide();
-    }
+    onDropdownWillHide && onDropdownWillHide();
   };
 
   _renderLoading = () => {
